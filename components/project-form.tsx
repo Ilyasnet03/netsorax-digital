@@ -115,14 +115,15 @@ export function ProjectForm() {
           <input type="tel" autoComplete="tel" value={values.phone} onChange={(e) => updateField("phone", e.target.value)} onBlur={() => markTouched("phone")} placeholder="+33 6 12 34 56 78" />
         </label>
         <label className="form-field">
-          <span>Budget estimé <small>Facultatif</small></span>
-          <select value={values.budget} onChange={(e) => updateField("budget", e.target.value)} onBlur={() => markTouched("budget")}>
-            <option value="">À définir ensemble</option>
-            <option value="Moins de 5 000 €">Moins de 5 000 €</option>
-            <option value="5 000 – 15 000 €">5 000 – 15 000 €</option>
-            <option value="15 000 – 30 000 €">15 000 – 30 000 €</option>
-            <option value="Plus de 30 000 €">Plus de 30 000 €</option>
-          </select>
+          <span>Budget estimé en dirhams (MAD) <small>Facultatif</small></span>
+          <input
+            type="text"
+            inputMode="decimal"
+            value={values.budget}
+            onChange={(e) => updateField("budget", e.target.value)}
+            onBlur={() => markTouched("budget")}
+            placeholder="Saisissez votre budget en dirhams"
+          />
         </label>
       </div>
 

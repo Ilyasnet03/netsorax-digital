@@ -7,13 +7,19 @@ import {
   Code2,
   Cpu,
   Layers3,
+  Mail,
   MoveUpRight,
+  Phone,
   Sparkles,
   Workflow,
 } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { ProjectForm } from "@/components/project-form";
 import { Reveal } from "@/components/reveal";
+
+const contactPhone = "06 25 96 39 77";
+const contactPhoneHref = "tel:+33625963977";
+const supportEmail = "productownerchip@gmail.com";
 
 const services = [
   {
@@ -246,6 +252,12 @@ export default function Home() {
               <h3>Commençons par<br />faire connaissance.</h3>
               <p>Quelques détails suffisent pour engager la conversation. Pas besoin d’avoir toutes les réponses dès maintenant.</p>
               <div className="contact-aside-note"><span className="status-dot" /> Réponse sous 48h ouvrées</div>
+              <a className="contact-phone" href={contactPhoneHref} aria-label={`Appeler le ${contactPhone}`}>
+                <Phone size={14} /> {contactPhone}
+              </a>
+              <a className="contact-phone" href={`mailto:${supportEmail}`}>
+                <Mail size={14} /> {supportEmail}
+              </a>
             </div>
             <ProjectForm />
           </Reveal>
@@ -254,7 +266,7 @@ export default function Home() {
       <footer className="site-footer section-shell">
         <a className="wordmark" href="#" aria-label="Netsorax, haut de page"><span className="brand-mark">N</span><span>Netsorax<span className="brand-dot">.</span></span></a>
         <p>La technologie au service des idées.</p>
-        <div className="footer-links"><a href="#expertises">Expertises</a><a href="#projets">Projets</a><a href="#contact">Contact</a><a href="/admin/login">Espace admin</a></div>
+        <div className="footer-links"><a href="#expertises">Expertises</a><a href="#projets">Projets</a><a href="#contact">Contact</a><a href={contactPhoneHref} aria-label={`Appeler le ${contactPhone}`}>{contactPhone}</a><a href={`mailto:${supportEmail}`}>{supportEmail}</a><a href="/admin/login">Espace admin</a></div>
         <span className="copyright">© {new Date().getFullYear()} NETSORAX. FAIT AVEC INTENTION.</span>
       </footer>
     </>
