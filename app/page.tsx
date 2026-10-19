@@ -2,7 +2,6 @@ import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
-  Braces,
   Check,
   Code2,
   Cpu,
@@ -10,9 +9,9 @@ import {
   Mail,
   MoveUpRight,
   Phone,
-  Sparkles,
   Workflow,
 } from "lucide-react";
+import { AmbientGlow } from "@/components/ambient-glow";
 import { Navigation } from "@/components/navigation";
 import { ProjectForm } from "@/components/project-form";
 import { Reveal } from "@/components/reveal";
@@ -104,8 +103,8 @@ export default function Home() {
                 <span className="gradient-text">code pas tout seul.</span>
               </h1>
               <p className="hero-description">
-                Nous imaginons et développons des produits numériques qui font
-                avancer votre activité. Web, logiciel et intelligence artificielle.
+                Du cadrage au déploiement, nous concevons les outils numériques
+                qui résolvent de vrais problèmes — avec exigence, clarté et sens du détail.
               </p>
               <div className="hero-actions">
                 <a className="button button-primary" href="#contact">
@@ -116,28 +115,40 @@ export default function Home() {
                 </a>
               </div>
               <div className="hero-proof">
-                <div className="avatar-stack" aria-hidden="true">
-                  <span>✳</span><span>◈</span><span>✦</span>
-                </div>
-                <p><strong>Du premier croquis au produit lancé.</strong><br />Un partenaire technique à vos côtés.</p>
+                <span className="proof-mark"><Check size={15} /></span>
+                <p><strong>Un interlocuteur technique, du début à la fin.</strong><br />Des choix expliqués. Un produit conçu pour durer.</p>
               </div>
             </Reveal>
           </div>
           <Reveal className="hero-visual-wrap" delay={0.14}>
-            <div className="hero-visual">
-              <div className="hero-visual-orbit orbit-one" />
-              <div className="hero-visual-orbit orbit-two" />
-              <div className="hero-core"><Braces size={49} strokeWidth={1.2} /></div>
-              <span className="orbit-node node-web"><Code2 size={18} /><small>WEB</small></span>
-              <span className="orbit-node node-ai"><Sparkles size={18} /><small>IA</small></span>
-              <span className="orbit-node node-data"><Workflow size={18} /><small>DATA</small></span>
-              <span className="visual-label">DES IDÉES, EN MOUVEMENT<span>✳</span></span>
+            <AmbientGlow className="hero-visual">
+              <div className="hero-editor" aria-label="Extrait de code illustratif">
+                <div className="editor-topbar">
+                  <span className="editor-window-dots"><i /><i /><i /></span>
+                  <span>product.tsx</span>
+                  <span className="editor-language">TSX</span>
+                </div>
+                <div className="editor-code" aria-hidden="true">
+                  <span><i>01</i><b className="code-purple">export</b> <b className="code-blue">function</b> <b className="code-yellow">Product</b>() {"{"}</span>
+                  <span><i>02</i>  <b className="code-purple">return</b> (</span>
+                  <span><i>03</i>    &lt;<b className="code-blue">Experience</b></span>
+                  <span><i>04</i>      quality=<b className="code-green">"crafted"</b></span>
+                  <span><i>05</i>      purpose=<b className="code-green">"yours"</b></span>
+                  <span><i>06</i>    /&gt;</span>
+                  <span><i>07</i>  )</span>
+                  <span><i>08</i>{"}"}</span>
+                </div>
+                <div className="editor-footer">
+                  <span><span className="status-dot" /> Prêt à évoluer</span>
+                  <span>WEB · LOGICIEL · IA</span>
+                </div>
+              </div>
               <div className="visual-glass-card">
                 <span className="glass-icon"><Check size={15} /></span>
-                <span><strong>Conçu pour durer</strong><small>Technologie. Avec intention.</small></span>
+                <span><strong>Conçu avec intention</strong><small>Du besoin à la mise en ligne.</small></span>
                 <span className="glass-sparkle">✦</span>
               </div>
-            </div>
+            </AmbientGlow>
           </Reveal>
           <div className="hero-bottomline">
             <span>INGÉNIERIE · CRÉATIVITÉ · IMPACT</span>
@@ -164,6 +175,27 @@ export default function Home() {
                 <p>{description}</p>
                 <div className="tag-row">{tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
                 <MoveUpRight className="service-arrow" size={18} />
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section className="process-section section-shell" id="methode">
+          <Reveal className="process-heading">
+            <span className="section-kicker">UNE MÉTHODE, PAS DE RECETTE</span>
+            <h2>Le bon problème.<br /><span className="muted-heading">La bonne solution.</span></h2>
+            <p>Chaque projet commence par comprendre votre contexte. La technologie vient ensuite.</p>
+          </Reveal>
+          <div className="process-grid">
+            {[
+              { number: "01", title: "Comprendre", description: "On clarifie vos objectifs, vos contraintes et ce qui ferait réellement la différence." },
+              { number: "02", title: "Concevoir", description: "On choisit une approche proportionnée, on dessine l’expérience et on valide les priorités." },
+              { number: "03", title: "Construire", description: "On développe, on teste et on vous accompagne jusqu’à la mise en ligne." },
+            ].map((step, index) => (
+              <Reveal key={step.number} className="process-step" delay={index * 0.08}>
+                <span className="process-number">{step.number}<ArrowUpRight size={15} /></span>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
               </Reveal>
             ))}
           </div>
@@ -217,7 +249,7 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
-          <p className="portfolio-note">Projets de démonstration — remplacez-les par vos réalisations.</p>
+          <p className="portfolio-note">Concepts visuels de démonstration — ils ne représentent pas des références clients.</p>
         </section>
 
         <section className="about-section section-shell" id="apropos">
