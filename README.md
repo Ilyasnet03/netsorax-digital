@@ -8,81 +8,64 @@ Vitrine française pour un studio d’ingénierie numérique, avec formulaire de
 - Framer Motion pour les animations de révélation au défilement
 - PostgreSQL et Prisma pour enregistrer les demandes
 - Sessions administrateur chiffrées avec `iron-session` et mots de passe vérifiés avec bcrypt
-- Netlify pour l’hébergement Next.js et Neon pour PostgreSQL
+- Render pour l’hébergement Next.js et Neon pour PostgreSQL
 
-## Déploiement gratuit (Netlify + Neon)
+## Déploiement sur Render
 
-Les offres gratuites ont des quotas et conditions susceptibles d’évoluer. Netlify héberge l’application ; Neon conserve les demandes dans PostgreSQL. SQLite n’est pas utilisé en production : son disque local n’est pas un stockage persistant pour les fonctions serverless.
+Le fichier [`render.yaml`](./render.yaml) décrit un Web Service Render dans la région de Francfort. Le service utilise Node.js 22, applique les migrations Prisma pendant le build, puis démarre Next.js. Il s’agit d’un serveur web, pas d’un site statique : le formulaire et l’espace d’administration ont besoin des fonctions serveur de Next.js.
 
-### 1. Créer la base Neon
+### 1. Préparer PostgreSQL sur Neon
 
-1. Créez un projet sur [Neon](https://neon.com/).
-2. Dans **Connect**, récupérez les deux URL PostgreSQL :
-   - **Pooled** (hôte contenant `-pooler`) pour `DATABASE_URL`.
-   - **Direct / unpooled** pour `DIRECT_URL`, utilisé par les migrations.
-3. Pour l’URL pooled, gardez `sslmode=require` et ajoutez `pgbouncer=true` (avec `&` si l’URL contient déjà des paramètres).
+1. Créez ou réutilisez une base PostgreSQL sur [Neon](https://neon.com/).
+2. Récupérez les deux URL de connexion :
+   - **Pooled** (hôte contenant `-pooler`) pour `DATABASE_URL`. Gardez `sslmode=require` et ajoutez `pgbouncer=true` si nécessaire.
+   - **Direct / unpooled** pour `DIRECT_URL`, utilisée par Prisma pour appliquer les migrations.
+3. Pour limiter la latence, choisissez si possible une région Neon proche de Francfort.
 
-### 2. Préparer les secrets
+Ne saisissez jamais ces URL dans le dépôt ou dans le chat.
 
-Générez un nouveau mot de passe administrateur, unique et d’au moins 16 caractères. **N’utilisez pas le mot de passe communiqué dans la conversation** : il a été exposé et ne doit pas servir en production.
+### 2. Générer les secrets d’administration
 
-Depuis un terminal interactif à la racine du projet :
+Depuis un terminal interactif à la racine du projet, créez un nouveau mot de passe administrateur unique d’au moins 16 caractères et générez son hash :
 
 ```powershell
 npm install
 npm run admin:hash
 ```
 
-Le script masque la saisie et affiche une valeur bcrypt encodée en Base64. Copiez cette valeur : c’est `ADMIN_PASSWORD_HASH_B64`. Le mot de passe en clair n’est ni affiché ni enregistré par le script.
+Le script demande le mot de passe deux fois sans l’afficher et fournit la valeur à enregistrer comme `ADMIN_PASSWORD_HASH_B64`. N’enregistrez pas le mot de passe en clair.
 
-Générez également une clé de session :
+Générez aussi une clé de session :
 
 ```powershell
 node -e "console.log(require('node:crypto').randomBytes(48).toString('base64url'))"
 ```
 
-Utilisez cette valeur comme `SESSION_SECRET`. Ne la partagez pas et ne la commitez jamais.
+Gardez ces deux valeurs privées. Ne réutilisez pas un mot de passe qui a été communiqué dans une conversation.
 
-### 3. Configurer les variables de production dans Netlify
+### 3. Créer le service Render
 
-Ouvrez les [variables d’environnement du site Netsorax](https://app.netlify.com/projects/netsorax-ilyasben/configuration/env) et ajoutez-les au contexte **Production** :
+1. Poussez le projet sur un dépôt GitHub privé ou public. Vérifiez que `.env` n’est pas commité.
+2. Dans le [Dashboard Render](https://dashboard.render.com/), choisissez **New → Blueprint** et connectez le dépôt qui contient `render.yaml`.
+3. Lors de la création du service, renseignez les valeurs demandées pour `DATABASE_URL`, `DIRECT_URL`, `SESSION_SECRET`, `ADMIN_EMAIL` et `ADMIN_PASSWORD_HASH_B64`. Saisissez les secrets directement dans Render.
+4. Validez la création. Render exécute le build défini dans `render.yaml` puis publie le service avec une adresse `onrender.com`.
 
-```dotenv
-DATABASE_URL="URL_NEON_POOLED"
-DIRECT_URL="URL_NEON_DIRECTE"
-SESSION_SECRET="CLE_ALEATOIRE"
-ADMIN_EMAIL="votre-adresse-admin"
-ADMIN_PASSWORD_HASH_B64="VALEUR_BCRYPT_BASE64"
-```
+Le build exécute `npx prisma migrate deploy` avant la compilation. Si les variables PostgreSQL ne sont pas renseignées ou si une migration échoue, le déploiement échoue au lieu de lancer l’application sans sa base. Pour les futures évolutions de `prisma/schema.prisma`, créez et commitez une migration avec `npm run db:migrate -- --name nom-du-changement` avant de publier.
 
-`ADMIN_EMAIL` a déjà été configuré dans le site Netlify connecté. Vérifiez qu’il correspond à l’adresse d’administration souhaitée. Saisissez les URL Neon et les nouveaux secrets directement dans Netlify, jamais dans le chat ou le dépôt. Si vous remplacez le secret de mot de passe, générez-le localement avec `npm run admin:hash`.
+Le Blueprint sélectionne l’offre gratuite pour démarrer. Selon les limites de Render, un service gratuit peut s’endormir après une période sans trafic et prendre environ une minute à redémarrer ; cette offre est destinée aux tests et projets personnels, pas à une application de production. Le système de fichiers du service n’est pas persistant : les demandes restent stockées dans Neon, pas sur le disque Render. Passez à une instance payante si vous avez besoin d’un service toujours actif.
 
-### 4. Appliquer les migrations et publier
+### 4. Vérifier le déploiement
 
-Le site Netlify `netsorax-ilyasben` est déjà lié à ce dossier. Depuis PowerShell, à la racine du projet, lancez :
+- Ouvrez l’URL fournie par Render et vérifiez la vitrine.
+- Envoyez une demande de test et vérifiez qu’elle apparaît dans `/admin`.
+- Connectez-vous à `/admin/login` avec l’adresse et le mot de passe configurés.
+- Supprimez la demande de test et vérifiez les filtres et les actions du tableau de bord.
 
-```powershell
-npm run deploy:production
-```
-
-Le script demande les URL Neon pooled et directe avec une saisie masquée, applique les migrations, puis lance la construction et le déploiement de production. Les URL ne s’affichent pas dans le terminal. Il s’arrête si la migration échoue. La migration crée les tables et index ; elle ne copie pas la base SQLite locale.
-
-Netlify fournit l’adresse HTTPS `https://netsorax-ilyasben.netlify.app`. Un dépôt GitHub n’est pas nécessaire pour cette publication directe. Pour activer plus tard les déploiements automatiques, reliez un dépôt GitHub au site.
-
-Avant tout changement ultérieur de `prisma/schema.prisma`, créez une migration avec `npm run db:migrate -- --name nom-du-changement`, commitez le dossier `prisma/migrations`, puis appliquez-la à la base Neon avec `npm run db:deploy` avant le déploiement.
-
-### 6. Vérifier le site publié
-
-- Ouvrez l’adresse Netlify et testez la vitrine.
-- Envoyez une demande réelle de test, puis vérifiez qu’elle apparaît dans `/admin`.
-- Connectez-vous à `/admin/login` avec le nouvel e-mail et le nouveau mot de passe.
-- Supprimez la demande de test et vérifiez les filtres, statuts et actions du tableau de bord.
-
-Un nom de domaine personnalisé n’est pas inclus dans la gratuité de son enregistrement ; l’adresse `*.netlify.app` suffit pour débuter.
+Cette configuration Render ne supprime ni ne désactive le déploiement Netlify existant. Choisissez l’adresse Render comme adresse de production lorsque vous serez prêt à basculer.
 
 ## Développement local
 
-Pour travailler en local, renseignez dans `.env` les mêmes variables Neon que ci-dessus. Après la configuration initiale, lancez :
+Pour travailler en local, configurez dans `.env` les mêmes variables Neon, puis lancez :
 
 ```powershell
 npm install
@@ -90,7 +73,7 @@ npm run db:generate
 npm run dev
 ```
 
-Ouvrez [http://localhost:3000](http://localhost:3000). Pour reconstruire le client Prisma après un changement de schéma, lancez `npm run db:generate`. Le tableau de bord et la soumission du formulaire exigent une connexion à PostgreSQL.
+Ouvrez [http://localhost:3000](http://localhost:3000). Le tableau de bord et la soumission du formulaire nécessitent une connexion à PostgreSQL.
 
 ## Fonctionnalités
 
