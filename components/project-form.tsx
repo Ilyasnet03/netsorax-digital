@@ -112,7 +112,7 @@ export function ProjectForm() {
         </label>
         <label className="form-field">
           <span>Téléphone <small>Facultatif</small></span>
-          <input type="tel" autoComplete="tel" value={values.phone} onChange={(e) => updateField("phone", e.target.value)} onBlur={() => markTouched("phone")} placeholder="+33 6 12 34 56 78" />
+          <input type="tel" autoComplete="tel" value={values.phone} onChange={(e) => updateField("phone", e.target.value)} onBlur={() => markTouched("phone")} placeholder="+212 6 12 34 56 78" />
         </label>
         <label className="form-field">
           <span>Budget estimé en dirhams (MAD) <small>Facultatif</small></span>

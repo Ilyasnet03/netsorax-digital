@@ -3,10 +3,12 @@
 import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { TerminalEasterEgg } from "@/components/terminal-easter-egg";
 
 const links = [
   { label: "Expertises", href: "#expertises" },
   { label: "Méthode", href: "#methode" },
+  { label: "Lab", href: "#lab" },
   { label: "Projets", href: "#projets" },
   { label: "À propos", href: "#apropos" },
 ];
@@ -38,28 +40,31 @@ export function Navigation() {
           ))}
         </div>
 
-        <button
-          className="theme-toggle"
-          type="button"
-          onClick={toggleTheme}
-          aria-label="Changer de thème"
-          title="Changer de thème"
-        >
-          <Sun className="theme-icon-sun" size={17} aria-hidden="true" />
-          <Moon className="theme-icon-moon" size={17} aria-hidden="true" />
-        </button>
-        <a className="nav-cta" href="#contact">
-          Parlons de votre projet <ArrowUpRight size={15} />
-        </a>
-        <button
-          className="mobile-menu-button"
-          type="button"
-          aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          aria-expanded={isOpen}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X size={21} /> : <Menu size={21} />}
-        </button>
+        <div className="nav-actions">
+          <button
+            className="theme-toggle"
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Changer de thème"
+            title="Changer de thème"
+          >
+            <Sun className="theme-icon-sun" size={17} aria-hidden="true" />
+            <Moon className="theme-icon-moon" size={17} aria-hidden="true" />
+          </button>
+          <TerminalEasterEgg />
+          <a className="nav-cta" href="#contact">
+            Parlons du projet <ArrowUpRight size={15} />
+          </a>
+          <button
+            className="mobile-menu-button"
+            type="button"
+            aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={isOpen}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X size={21} /> : <Menu size={21} />}
+          </button>
+        </div>
       </nav>
       {isOpen && (
         <div className="mobile-menu">

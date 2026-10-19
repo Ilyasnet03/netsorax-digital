@@ -14,10 +14,12 @@ import {
 import { AmbientGlow } from "@/components/ambient-glow";
 import { Navigation } from "@/components/navigation";
 import { ProjectForm } from "@/components/project-form";
+import { Playground } from "@/components/playground";
 import { Reveal } from "@/components/reveal";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 
-const contactPhone = "06 25 96 39 77";
-const contactPhoneHref = "tel:+33625963977";
+const contactPhone = "+212 6 25 96 39 77";
+const contactPhoneHref = "tel:+212625963977";
 const supportEmail = "productownerchip@gmail.com";
 
 const services = [
@@ -62,30 +64,63 @@ const services = [
 const projects = [
   {
     index: "01",
-    category: "PLATEFORME SAAS",
-    title: "Orbit — gestion de projet",
-    description: "Un espace de travail intelligent pour des équipes qui avancent vite.",
-    technologies: ["Next.js", "TypeScript", "PostgreSQL"],
-    className: "project-art project-art-orbit",
-    visual: "orbit-visual",
+    category: "ASSURANCE · GESTION D’EXPERTISE",
+    title: "SI Expert — Wafa Assurance",
+    description: "Application de gestion des missions d’expertise automobile, avec des espaces dédiés aux experts et aux administrateurs.",
+    technologies: ["React", "Spring Boot", "Keycloak"],
+    repository: "https://github.com/Ilyasnet03/si-expert2",
+    mark: "SI",
+    product: "Suivi des missions d’expertise",
+    features: ["Affectation et suivi des missions", "Gestion des devis et expertises", "Accès par rôles : expert et admin"],
+    className: "project-art project-art-insurance",
   },
   {
     index: "02",
-    category: "INTELLIGENCE ARTIFICIELLE",
-    title: "Clair — analyse documentaire",
-    description: "L’IA qui extrait l’essentiel de milliers de documents en quelques secondes.",
-    technologies: ["Python", "LLM", "Azure"],
-    className: "project-art project-art-clair",
-    visual: "clair-visual",
+    category: "VISION PAR ORDINATEUR",
+    title: "Détection du port du casque",
+    description: "Prototype de classification d’images pour distinguer le port du casque de sécurité de son absence.",
+    technologies: ["Python", "TensorFlow", "OpenCV", "Gradio"],
+    repository: "https://github.com/Ilyasnet03/detecteur-de-port-du-casque",
+    mark: "CV",
+    product: "Analyse d’image",
+    features: ["Classification par CNN", "Casque détecté / absent", "Interface de test Gradio"],
+    className: "project-art project-art-vision",
   },
   {
     index: "03",
-    category: "E-COMMERCE",
-    title: "Maison Aube — commerce responsable",
-    description: "Une boutique digitale immersive conçue pour une nouvelle génération de marques.",
-    technologies: ["React", "Shopify", "Motion"],
-    className: "project-art project-art-aube",
-    visual: "aube-visual",
+    category: "RESSOURCES HUMAINES · MACHINE LEARNING",
+    title: "Prédiction des départs en entreprise",
+    description: "Outil d’analyse exploratoire qui estime le risque de départ et met en évidence les facteurs associés.",
+    technologies: ["Python", "Random Forest", "Gradio"],
+    repository: "https://github.com/Ilyasnet03/predir-la-demission-d-un-employe",
+    mark: "RH",
+    product: "Analyse prédictive RH",
+    features: ["Analyse de profils employés", "Facteurs d’influence visualisés", "Interface interactive Gradio"],
+    className: "project-art project-art-people",
+  },
+  {
+    index: "04",
+    category: "RECRUTEMENT · INTELLIGENCE ARTIFICIELLE",
+    title: "Matching IA de candidatures",
+    description: "Concept de plateforme pour rapprocher des profils candidats des compétences recherchées dans une offre.",
+    technologies: ["PHP", "IA", "Recrutement"],
+    repository: "https://github.com/Ilyasnet03/recrutement-avec-matching-Ai",
+    mark: "IA",
+    product: "Matching de profils",
+    features: ["Création de fiches de poste", "Ajout de CV candidats", "Recherche de profils adaptés"],
+    className: "project-art project-art-recruitment",
+  },
+  {
+    index: "05",
+    category: "APPLICATION MOBILE",
+    title: "Application météo",
+    description: "Projet Flutter de prévision météo avec interfaces documentées dans le dépôt.",
+    technologies: ["Flutter", "Dart"],
+    repository: "https://github.com/Ilyasnet03/app_weather",
+    mark: "°",
+    product: "Météo au quotidien",
+    features: ["Application mobile Flutter", "Interface météo", "Projet disponible sur GitHub"],
+    className: "project-art project-art-weather",
   },
 ];
 
@@ -93,6 +128,7 @@ export default function Home() {
   return (
     <>
       <Navigation />
+      <WhatsAppButton />
       <main>
         <section className="hero section-shell">
           <div className="hero-copy">
@@ -201,6 +237,8 @@ export default function Home() {
           </div>
         </section>
 
+        <Playground />
+
         <section className="portfolio-section section-shell" id="projets">
           <Reveal className="section-heading portfolio-heading">
             <div>
@@ -210,46 +248,31 @@ export default function Home() {
             <p>Quelques exemples de ce qui devient possible lorsque la bonne idée rencontre la bonne équipe.</p>
           </Reveal>
           <div className="projects-grid">
-            {projects.map((project, index) => (
-              <Reveal key={project.index} delay={index * 0.08} className="project-card">
+            {projects.map((project) => (
+              <Reveal key={project.index} className="project-card">
                 <div className={project.className}>
-                  {project.visual === "orbit-visual" && (
-                    <div className="orbit-board">
-                      <div className="orbit-board-top"><span>◉ Orbit</span><span>•••</span></div>
-                      <div className="orbit-board-title">Vue d’ensemble <span>Cette semaine⌄</span></div>
-                      <div className="orbit-metrics"><div><small>Projets actifs</small><b>08</b><i>+2 ce mois</i></div><div><small>Progression</small><b>72%</b><i>En bonne voie</i></div></div>
-                      <div className="orbit-bars"><i /><i /><i /><i /><i /><i /><i /><i /><i /></div>
-                      <div className="orbit-board-footer"><span>◉ Design system</span><span>◉ Déploiement</span><span>◉ Recherche</span></div>
-                    </div>
-                  )}
-                  {project.visual === "clair-visual" && (
-                    <div className="clair-window">
-                      <div className="clair-top"><span>✳ clair</span><span>Assistant documentaire</span><span>•••</span></div>
-                      <div className="clair-content"><div className="doc-icon">PDF</div><div><small>RAPPORT ANNUEL · 2025</small><b>Analyse terminée</b><span>Résumé généré en 4,2 secondes</span></div></div>
-                      <div className="clair-summary"><span>✦</span><div><b>En quelques mots</b><p>La croissance progresse de 18 % cette année, portée par l’innovation produit et une présence renforcée à l’international.</p></div></div>
-                      <div className="clair-lines"><i /><i /><i /></div>
-                    </div>
-                  )}
-                  {project.visual === "aube-visual" && (
-                    <div className="aube-window">
-                      <div className="aube-nav"><span>maison aube</span><span>Collections　 À propos　 ◯</span></div>
-                      <div className="aube-art"><div className="aube-sun" /><div className="aube-vase vase-one" /><div className="aube-vase vase-two" /><div className="aube-branch">✳</div><span>OBJETS POUR DEMAIN</span></div>
-                      <div className="aube-caption">L’essentiel, naturellement. <span>↗</span></div>
-                    </div>
-                  )}
+                  <div className="project-showcase">
+                    <div className="showcase-topline"><span className="showcase-mark">{project.mark}</span><span className="showcase-label">{project.category}</span></div>
+                    <h4>{project.product}</h4>
+                    <ul>{project.features.map((feature) => <li key={feature}><Check size={13} />{feature}</li>)}</ul>
+                    <div className="showcase-stack">{project.technologies.slice(0, 3).map((technology) => <span key={technology}>{technology}</span>)}</div>
+                  </div>
                   <span className="project-index">{project.index}</span>
-                  <span className="project-open"><ArrowUpRight size={18} /></span>
+                  <a className="project-open" href={project.repository} target="_blank" rel="noreferrer" aria-label={`Voir ${project.title} sur GitHub`}>
+                    <ArrowUpRight size={18} />
+                  </a>
                 </div>
                 <div className="project-info">
                   <span className="project-category">{project.category}</span>
                   <h3>{project.title}</h3>
                   <p>{project.description}</p>
                   <div className="tag-row">{project.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div>
+                  <a className="project-repository-link" href={project.repository} target="_blank" rel="noreferrer">Voir le dépôt sur GitHub <ArrowUpRight size={13} /></a>
                 </div>
               </Reveal>
             ))}
           </div>
-          <p className="portfolio-note">Concepts visuels de démonstration — ils ne représentent pas des références clients.</p>
+          <p className="portfolio-note">Projets issus de dépôts GitHub publics. SI Expert est présenté comme un projet technique ; cela ne constitue pas une recommandation officielle de Wafa Assurance.</p>
         </section>
 
         <section className="about-section section-shell" id="apropos">
